@@ -42,15 +42,32 @@ conn.commit()
 # 📌 Функции CRUD (нужно реализовать)
 def add_client(name, phone, email):
     """Добавляет клиента в базу данных"""
-    pass  # TODO: Реализовать добавление клиента
+    cursor.execute("INSERT INTO clients (name, phone, email) VALUES (?, ?, ?)",
+                   (name, phone, email))
+    conn.commit()
+    print("Клиент добавлен.")
+   
 
 def add_menu_item(item_name, price):
     """Добавляет блюдо в меню"""
-    pass  # TODO: Реализовать добавление позиции меню
+    cursor.execute("INSERT INTO menu (item_name, price) VALUES (?, ?)",
+                   (item_name, price))
+    conn.commit()
+    print("Позиция меню добавлена.")
+
 
 def create_order(client_id, items):
     """Создает новый заказ"""
-    pass  # TODO: Реализовать создание заказа
+    total_price = 0
+    for item, quantity in items:
+        cursor.execute("SELECT price FROM menu WHERE id=?", (item,))
+        item_price = cursor.fetchone()[0]
+        total_price += item_price * quantity    
+    cursor.execute("INSERT INTO orders (client_id, total_price) VALUES (?, ?)",
+                   (client_id, total_price))
+    conn.commit()
+    print(f"Заказ {order_id} на сумму {total_price:.2f} рублей создан.")
+
 
 def list_clients():
     """Выводит список клиентов"""
